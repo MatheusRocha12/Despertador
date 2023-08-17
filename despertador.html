@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Despertador com Som</title>
+  <style>
+    /* Estilos CSS aqui (mesmo código do exemplo anterior) */
+  </style>
+</head>
+<body>
+  <h1>Despertador com Som</h1>
+
+  <div class="despertador-container">
+    <label for="hora">Hora:</label>
+    <input type="number" id="hora" min="0" max="23">
+
+    <label for="minutos">Minutos:</label>
+    <input type="number" id="minutos" min="0" max="59">
+
+    <button id="definirDespertador">Definir Despertador</button>
+
+    <div id="contador"></div>
+
+    <audio id="alarme" src="gemido-whatsapp.mp3" loop></audio>
+  </div>
+
+  <script>
+    //comentário de uma linha
+    /**
+     *comentário de varias linhas
+     *
+     * 
+     */ 
+ //  aqui a gente tá pegando o botão definirDespertador e colocando um ouvidor de clique nele.
+document.getElementById("definirDespertador").addEventListener("click", function() {
+  // o codigo a baixo pega as horas que você digitou
+  const horas = parseInt(document.getElementById("hora").value);
+  //o código a baixo pega os minutos que você digitou
+  const minutos = parseInt(document.getElementById("minutos").value);
+
+  // Olha só, se você digitou umas horas e minutos malucos, a gente mostra um aviso e para por aqui.
+  if (isNaN(horas) || isNaN(minutos) || horas < 0 || horas > 23 || minutos < 0 || minutos > 59) {
+    //o código a baixo é o aiviso
+    alert("Pô, coloca aí uma hora e minutos que fazem sentido, tá ligado?");
+    //este código faz volta desde do ínicio 
+    return;
+  }
+
+  // Agora a gente chama a função despertador passando as horas e minutos que você botou.
+  despertador(horas, minutos);
+});
+
+// Essa é a função despertador, que vai calcular quanto tempo falta pro alarme tocar.
+function despertador(horas, minutos) {
+  // Pega a hora que é agora.
+  const agora = new Date();
+  // Cria uma hora pro despertador com as horas e minutos que você quer.
+  const horaDespertar = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), horas, minutos, 0);
+
+  // Agora a gente calcula quanto tempo falta, em milissegundos, pro despertador tocar.
+  const diferenca = horaDespertar - agora;
+
+  // Se já passou do horário, a gente manda o recado pra acordar!
+  if (diferenca <= 0) {
+    //aqui manda tocar o som
+    document.getElementById("contador").textContent = "Bora acordar, dorminhoco!";
+    //aqui tbm
+    tocarSom();
+    // e aqui retorna pro ínicio 
+    return;
+  }
+
+  // Calcula quantos segundos faltam pro despertador.
+  const segundosAteDespertar = Math.floor(diferenca / 1000);
+  // Aqui a gente tá criando um espacinho pra guardar o texto do contador.
+  let contadorTexto = "";
+
+  // Aqui a gente faz uma contagem regressiva bacana, mostrando quanto tempo falta a cada segundo.
+  for (let i = segundosAteDespertar; i >= 0; i--) {
+    // Aqui a gente tá criando uma frase pro contador. A frase vai dizer "Só mais X segundos até o alarme tocar...",
+// e o X vai ser substituído pelo número de segundos que falta, que é o valor de 'i' no momento.
+contadorTexto = `Tá quase! Faltam ${i} segundos até o alarme tocar...`;
+
+  // A gente tá preparando um "espera aí" com estilo. Tipo, "daqui a pouco a gente vai fazer isso..."
+setTimeout(() => {
+
+     // Olha só, a gente tá pegando um lugar na tela com o ID "contador" e colocando um texto lá dentro.
+// Esse texto é aquele que a gente preparou lá em cima, o 'contadorTexto', lembrando quantos segundos faltam pro alarme tocar.
+document.getElementById("contador").textContent = contadorTexto;
+
+  // Beleza, a gente tá dando um tempinho pra executar alguma coisa depois de um certo tempo.
+// O tempo de espera tá sendo calculado assim: (tempo total - tempo que já passou) * 1000.
+}, (segundosAteDespertar - i) * 1000);
+
+  }
+
+  // Depois da contagem regressiva, mostra "Hora de acordar!" e toca um som maneiro.
+  setTimeout(() => {
+    // Aí a festa tá pronta! A gente pegou aquele pedacinho da tela com o ID "contador"
+// e mandou um recado bem direto: "Hora de acordar, preguiçoso!"
+document.getElementById("contador").textContent = "Hora de acordar, preguiçoso!";
+
+    // Agora a gente tá chamando a função que vai tocar um som. 
+// Tipo apertar o play em um rádio, só que é um som de alarme.
+tocarSom();
+
+ // Beleza, aí a gente tá esperando por um tempinho, igual a contagem de segundos até o despertador,
+// multiplicado por 1000 pra dar em milissegundos. E depois desse tempinho, a gente manda um recado legal!
+}, segundosAteDespertar * 1000);
+
+}
+
+// Função pra tocar um som de alarme legalzão.
+function tocarSom() {
+  // Agora a gente tá pegando um pedaço especial da página, aquele com o ID "alarme".
+// É tipo a caixa de som que a gente vai usar pra fazer o barulho do alarme.
+const alarme = document.getElementById("alarme");
+
+  // Agora é a hora do show! A gente tá apertando o botão de "play" na nossa caixinha de som.
+// Isso faz o som do alarme sair tocando e acordar até quem tá dormindo pesado!
+alarme.play();
+
+}
+</script>
+
+</body>
+</html>
